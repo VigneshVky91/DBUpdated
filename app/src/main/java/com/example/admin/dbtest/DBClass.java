@@ -2,6 +2,7 @@ package com.example.admin.dbtest;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
@@ -47,5 +48,32 @@ public class DBClass extends SQLiteOpenHelper
         {
             return true;
         }
+    }
+    public Cursor viewData()
+    {
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor res = db.rawQuery("select * from "+TABLE_NAME, null);
+        return res;
+    }
+
+    public boolean updateData(String id, String name)
+    {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put("ID",id);
+        cv.put("Name",name);
+
+        int res=db.update(TABLE_NAME,cv,"ID = ?",new String[] { id } );
+        if(res==0)
+        {
+            return false;
+        }
+        return true;
+    }
+    public int deleteData(String id)
+    {
+        SQLiteDatabase db = this.getWritableDatabase();
+        int res = db.delete(TABLE_NAME,"ID = ?", new String[]{ id } );
+        return res;
     }
 }
